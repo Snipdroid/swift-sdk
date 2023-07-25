@@ -1,0 +1,181 @@
+openapi: 3.0.0
+info:
+  title: App Tracker Open API
+  description: Note that the base url is for test purpose only, do not use this server
+    in production.
+  version: v2.0.0
+servers:
+- url: https://apptracker-dev.cn2.tiers.top/api
+
+components:
+  schemas:
+    ErrorMessage:
+      type: object
+      properties:
+        error:
+          type: boolean
+        reason:
+          type: string
+    PageOfAppInfoList:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/PaginationMetadata'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AppInfo'
+      required:
+        - metadata
+        - items
+    Tag:
+      type: object
+      properties:
+        color:
+          type: integer
+        name:
+          type: string
+        id:
+          type: string
+      required:
+        - color
+        - name
+        - id
+    Request:
+      type: object
+      properties:
+        count:
+          type: integer
+        version:
+          type: integer
+        fromIconPack:
+          type: object
+          schema:
+            id:
+              type: string
+          required: [id]
+        appInfo:
+          type: object
+          schema:
+            id:
+              type: string
+          required: [id]
+      required: [count, version, fromIconPack, appInfo]
+    AppInfo:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+          example: 2023-07-15T03:52:58Z
+        appName:
+          type: string
+          example: QQ
+        updatedAt:
+          type: string
+          format: nullable
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        count:
+          type: integer
+          format: int32
+          example: 165
+        requests:
+          type: array
+          items:
+            $ref: '#/components/schemas/Request'
+        packageName:
+          type: string
+          example: com.tencent.mobileqq
+        id:
+          type: string
+          example: 620CDE8D-0751-4246-AF16-2E8FA5B9028B
+        suggestedName:
+          type: string
+          format: nullable
+        activityName:
+          type: string
+          example: com.tencent.mobileqq.activity.SplashActivity
+      required:
+        - id
+        - appName
+        - packageName
+        - activityName
+        - count
+        - createdAt
+        - tags
+        - requests
+    PaginationMetadata:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+          example: 1
+        per:
+          type: integer
+          format: int32
+          example: 10
+        total:
+          type: integer
+          format: int32
+          example: 95
+  parameters:
+    page:
+      name: page
+      in: query
+      description: Page number
+      required: false
+      schema:
+        type: integer
+      example: 1
+    per:
+      name: per
+      in: query
+      description: Items per page
+      required: false
+      schema:
+        type: integer
+      example: 10
+
+paths:
+  /appinfo:
+    get:
+      summary: Get apps
+      description: ""
+      operationId: getAppInfo
+      parameters:
+        - name: q
+          in: query
+          description: Search keyword
+          required: false
+          schema:
+            type: "string"
+          example: "camera"
+        - name: regex
+          in: query
+          description: Regex pattern
+          required: false
+          schema:
+            type: string
+          example: "^camera"
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/per'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageOfAppInfoList'
+        '520':
+          description: DecodingError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+        
+        
