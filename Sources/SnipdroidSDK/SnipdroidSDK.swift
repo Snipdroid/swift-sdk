@@ -2,23 +2,23 @@ import Foundation
 import OpenAPIRuntime
 import OpenAPIURLSession
 
-class SnipdroidClient {
+public class SnipdroidClient {
     private let client: Client
     
-    init(serverUrl: URL) {
+    public init(serverUrl: URL) {
         self.client = Client(
             serverURL: serverUrl,
             transport: URLSessionTransport()
         )
     }
     
-    enum QueryType {
+    public enum QueryType {
         case plain(String)
         case regex(String)
     }
     
     /// Query app infomation from server
-    func getAppInfo(
+    public func getAppInfo(
         query: QueryType,
         page: Components.Parameters.page? = nil,
         per: Components.Parameters.per? = nil
@@ -54,7 +54,7 @@ class SnipdroidClient {
     }
     
     /// Upload new app infomation to server
-    func uploadAppInfo(_ apps: [Components.Schemas.AppInfo_Create]) async throws -> [Components.Schemas.AppInfo] {
+    public func uploadAppInfo(_ apps: [Components.Schemas.AppInfo_Create]) async throws -> [Components.Schemas.AppInfo] {
         let response = try await client.uploadAppInfo(.init(body: .json(apps)))
         
         switch response {
