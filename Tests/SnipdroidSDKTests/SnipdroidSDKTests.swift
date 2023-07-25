@@ -9,4 +9,12 @@ final class SnipdroidSDKTests: XCTestCase {
         
         let _ = try await client.getAppInfo(query: .plain("QQ"))
     }
+    
+    func testUploadAppInfo() async throws {
+        let client = SnipdroidClient(serverUrl: serverUrl)
+        
+        let _ = try await client.uploadAppInfo([
+            .init(appName: "Test App", packageName: "com.example.testApp", activityName: "com.example.testApp.MAIN_ACTIVITY")
+        ])
+    }
 }

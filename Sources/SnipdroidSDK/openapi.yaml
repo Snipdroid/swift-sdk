@@ -5,7 +5,7 @@ info:
     in production.
   version: v2.0.0
 servers:
-- url: https://apptracker-dev.cn2.tiers.top/api
+  - url: https://apptracker-dev.cn2.tiers.top/api
 
 components:
   schemas:
@@ -20,11 +20,11 @@ components:
       type: object
       properties:
         metadata:
-          $ref: '#/components/schemas/PaginationMetadata'
+          $ref: "#/components/schemas/PaginationMetadata"
         items:
           type: array
           items:
-            $ref: '#/components/schemas/AppInfo'
+            $ref: "#/components/schemas/AppInfo"
       required:
         - metadata
         - items
@@ -77,7 +77,7 @@ components:
         tags:
           type: array
           items:
-            $ref: '#/components/schemas/Tag'
+            $ref: "#/components/schemas/Tag"
         count:
           type: integer
           format: int32
@@ -85,7 +85,7 @@ components:
         requests:
           type: array
           items:
-            $ref: '#/components/schemas/Request'
+            $ref: "#/components/schemas/Request"
         packageName:
           type: string
           example: com.tencent.mobileqq
@@ -98,15 +98,20 @@ components:
         activityName:
           type: string
           example: com.tencent.mobileqq.activity.SplashActivity
-      required:
-        - id
-        - appName
-        - packageName
-        - activityName
-        - count
-        - createdAt
-        - tags
-        - requests
+      required: [id, appName, packageName, activityName, count, createdAt]
+    AppInfo.Create:
+      type: object
+      properties:
+        appName:
+          type: string
+          example: QQ
+        packageName:
+          type: string
+          example: com.tencent.mobileqq
+        activityName:
+          type: string
+          example: com.tencent.mobileqq.activity.SplashActivity
+      required: [appName, packageName, activityName]
     PaginationMetadata:
       type: object
       properties:
@@ -161,21 +166,44 @@ paths:
           schema:
             type: string
           example: "^camera"
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/per'
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/per"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PageOfAppInfoList'
-        '520':
+                $ref: "#/components/schemas/PageOfAppInfoList"
+        "520":
           description: DecodingError
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorMessage'
-
-        
-        
+                $ref: "#/components/schemas/ErrorMessage"
+    post:
+      summary: Upload app info
+      description: ""
+      operationId: uploadAppInfo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/AppInfo.Create"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AppInfo"
+        "520":
+          description: DecodingError
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"

@@ -17,6 +17,7 @@ class SnipdroidClient {
         case regex(String)
     }
     
+    /// Query app infomation from server
     func getAppInfo(
         query: QueryType,
         page: Components.Parameters.page? = nil,
@@ -48,6 +49,25 @@ class SnipdroidClient {
                 throw error
             }
         case .undocumented(statusCode: let statusCode, _):
+            throw Components.Schemas.ErrorMessage(error: true, reason: "\(statusCode)")
+        }
+    }
+    
+    /// Upload new app infomation to server
+    func uploadAppInfo(_ apps: [Components.Schemas.AppInfo_Create]) async throws -> [Components.Schemas.AppInfo] {
+        let response = try await client.uploadAppInfo(.init(body: .json(apps)))
+        
+        switch response {
+        case .ok(let okResponse):
+            switch okResponse.body {
+            case .json(let uploadedApps): return uploadedApps
+            }
+        case .code520(let errorResponse):
+            switch errorResponse.body {
+            case .json(let error):
+                throw error
+            }
+        case .undocumented(let statusCode, _):
             throw Components.Schemas.ErrorMessage(error: true, reason: "\(statusCode)")
         }
     }
