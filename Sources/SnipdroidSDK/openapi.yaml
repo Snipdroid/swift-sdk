@@ -28,6 +28,48 @@ components:
       required:
         - metadata
         - items
+    PageOfRequestList:
+      type: object
+      properties:
+        metadata:
+          $ref: "#/components/schemas/PaginationMetadata"
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Request.Created"
+      required:
+        - metadata
+        - items
+    Request.Created:
+      type: object
+      properties: 
+        id: 
+          type: string
+          format: uuid
+          example: 1E0C530A-6B0C-4B3F-A174-9FA4E0A3C0FC
+        version: 
+          type: integer
+          format: int32
+          example: 1
+        appInfo: 
+          type: object
+          properties: 
+            appName: 
+              type: string
+              example: QQ
+            packageName: 
+              type: string
+              example: com.tencent.mobileqq
+            activityName: 
+              type: string
+              example: com.tencent.mobileqq.activity.SplashActivity
+          required: [appName, packageName, activityName]
+        count: 
+          type: integer
+          format: int32
+          example: 1
+      required: [id, version, appInfo]
+
     Tag:
       type: object
       properties:
@@ -37,6 +79,7 @@ components:
           type: string
         id:
           type: string
+          format: uuid
       required:
         - color
         - name
@@ -201,6 +244,35 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/AppInfo"
+        "520":
+          description: DecodingError
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+  /iconpack/requests:
+    get:
+      summary: Get requests
+      description: ""
+      operationId: getRequests
+      parameters:
+        - name: iconpackid
+          in: query
+          description: Icon Pack UUID
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: 7D2E8FA0-8460-4DD0-A1EC-C6BA2C70A573
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/per"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PageOfRequestList"
         "520":
           description: DecodingError
           content:

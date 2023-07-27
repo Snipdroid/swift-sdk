@@ -3,7 +3,7 @@ import OpenAPIRuntime
 import OpenAPIURLSession
 
 public class SnipdroidClient {
-    private let client: Client
+    let client: Client
     
     public init(serverUrl: URL) {
         self.client = Client(

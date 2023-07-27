@@ -17,4 +17,10 @@ final class SnipdroidSDKTests: XCTestCase {
             .init(appName: "Test App", packageName: "com.example.testApp", activityName: "com.example.testApp.MAIN_ACTIVITY")
         ])
     }
+    
+    func testGetRequest() async throws {
+        let client = SnipdroidClient(serverUrl: serverUrl)
+        
+        let _ = try await client.getRequestsFor(iconpack: "7D2E8FA0-8460-4DD0-A1EC-C6BA2C70A573")
+    }
 }
