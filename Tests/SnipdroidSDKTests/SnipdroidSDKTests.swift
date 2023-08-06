@@ -23,4 +23,11 @@ final class SnipdroidSDKTests: XCTestCase {
         
         let _ = try await client.getRequestsFor(iconpack: "7D2E8FA0-8460-4DD0-A1EC-C6BA2C70A573")
     }
+    
+    func testGetIcon() async throws {
+        let client = SnipdroidClient(serverUrl: serverUrl)
+        
+        let data = try await client.getIcon(packageName: "com.tencent.mobileqq")
+        XCTAssertEqual(data.count, 18090)
+    }
 }

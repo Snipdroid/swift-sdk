@@ -71,4 +71,17 @@ public class SnipdroidClient {
             throw Components.Schemas.ErrorMessage(error: true, reason: "\(statusCode)")
         }
     }
+    
+    public func getIcon(packageName: String) async throws -> Data {
+        let response = try await client.getIcon(.init(query: .init(packageName: packageName)))
+        
+        switch response {
+        case .ok(let okResponse):
+            switch okResponse.body {
+            case .binary(let data): return data
+            }
+        case .undocumented(let statusCode, _):
+            throw Components.Schemas.ErrorMessage(error: true, reason: "\(statusCode)")
+        }
+    }
 }

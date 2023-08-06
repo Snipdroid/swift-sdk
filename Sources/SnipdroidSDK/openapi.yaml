@@ -42,29 +42,29 @@ components:
         - items
     Request.Created:
       type: object
-      properties: 
-        id: 
+      properties:
+        id:
           type: string
           format: uuid
           example: 1E0C530A-6B0C-4B3F-A174-9FA4E0A3C0FC
-        version: 
+        version:
           type: integer
           format: int32
           example: 1
-        appInfo: 
+        appInfo:
           type: object
-          properties: 
-            appName: 
+          properties:
+            appName:
               type: string
               example: QQ
-            packageName: 
+            packageName:
               type: string
               example: com.tencent.mobileqq
-            activityName: 
+            activityName:
               type: string
               example: com.tencent.mobileqq.activity.SplashActivity
           required: [appName, packageName, activityName]
-        count: 
+        count:
           type: integer
           format: int32
           example: 1
@@ -279,3 +279,23 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorMessage"
+  /icon/local:
+    get:
+      summary: Get icon from server
+      description: ""
+      operationId: getIcon
+      parameters:
+        - name: packageName
+          in: query
+          required: true
+          schema:
+            type: string
+          example: com.tencent.mm
+      responses:
+        "200":
+          description: OK
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
