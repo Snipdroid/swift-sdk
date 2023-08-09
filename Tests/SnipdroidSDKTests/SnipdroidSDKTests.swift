@@ -30,4 +30,13 @@ final class SnipdroidSDKTests: XCTestCase {
         let data = try await client.getIcon(packageName: "com.tencent.mobileqq")
         XCTAssertEqual(data.count, 18090)
     }
+    
+    func testUserLogin() async throws {
+        let client = SnipdroidClient(serverUrl: serverUrl)
+        
+        var token = try await client.userLoginWith(username: "test@tiers.top", "shotaworld")
+        print(token)
+        token = try await client.userLoginWith(token: token.value)
+        print(token)
+    }
 }

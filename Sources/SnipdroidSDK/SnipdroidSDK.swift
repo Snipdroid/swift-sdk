@@ -84,4 +84,39 @@ public class SnipdroidClient {
             throw Components.Schemas.ErrorMessage(error: true, reason: "\(statusCode)")
         }
     }
+    
+    func userLoginWith(username: String, _ password: String) async throws -> Components.Schemas.UserToken {
+        
+        guard let encodedCredential = "\(username):\(password)"
+            .data(using: .utf8)?
+            .base64EncodedString() else {
+            throw Client.Error.base64EncodingError
+        }
+        
+        let headers = Operations.userLogin.Input.Headers(Authorization: "Basic \(encodedCredential)")
+        
+        return try await userLogin(headers: headers)
+    }
+    
+    func userLoginWith(token: String) async throws -> Components.Schemas.UserToken {
+        let headers = Operations.userLogin.Input.Headers(Authorization: "Bearer \(token)")
+        
+        return try await userLogin(headers: headers)
+    }
+    
+    
+    private func userLogin(headers: Operations.userLogin.Input.Headers) async throws -> Components.Schemas.UserToken {
+        let response = try await client.userLogin(.init(headers: headers))
+        
+        switch response {
+        case .ok(let okResponse):
+            switch okResponse.body {
+            case .json(let token):
+                return token
+            }
+        case .undocumented(let statusCode, _):
+            throw Components.Schemas.ErrorMessage(error: true, reason: "\(statusCode)")
+        }
+    }
 }
+

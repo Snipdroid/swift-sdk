@@ -69,7 +69,6 @@ components:
           format: int32
           example: 1
       required: [id, version, appInfo]
-
     Tag:
       type: object
       properties:
@@ -170,6 +169,31 @@ components:
           type: integer
           format: int32
           example: 95
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 620CDE8D-0751-4246-AF16-2E8FA5B9028B
+      required: [id]
+    UserToken:
+      type: object
+      properties:
+        expireAt:
+          type: string
+          format: date-time
+          example: 2023-07-15T03:52:58Z
+        id:
+          type: string
+          format: uuid
+          example: 620CDE8D-0751-4246-AF16-2E8FA5B9028B
+        value:
+          type: string
+          example: CH0/ZJMasHr4hZ1i/0q6CA==
+        user:
+          $ref: "#/components/schemas/User"
+      required: [id, value, expireAt, user]
   parameters:
     page:
       name: page
@@ -299,3 +323,23 @@ paths:
               schema:
                 type: string
                 format: binary
+  /users/login:
+    post:
+      summary: User login with password or token
+      description: ""
+      operationId: userLogin
+      parameters:
+        - name: Authorization
+          in: header
+          required: false
+          description: Basic auth with base64 encoded `{username}:{password}` or bearer token
+          schema:
+            type: string
+            example: "Basic dGVzdDp0ZXN0"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserToken"
