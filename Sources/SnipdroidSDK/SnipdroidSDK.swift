@@ -85,7 +85,7 @@ public class SnipdroidClient {
         }
     }
     
-    func userLoginWith(username: String, _ password: String) async throws -> Components.Schemas.UserToken {
+    public func userLoginWith(username: String, _ password: String) async throws -> Components.Schemas.UserToken {
         
         guard let encodedCredential = "\(username):\(password)"
             .data(using: .utf8)?
@@ -98,7 +98,7 @@ public class SnipdroidClient {
         return try await userLogin(headers: headers)
     }
     
-    func userLoginWith(token: String) async throws -> Components.Schemas.UserToken {
+    public func userLoginWith(token: String) async throws -> Components.Schemas.UserToken {
         let headers = Operations.userLogin.Input.Headers(Authorization: "Bearer \(token)")
         
         return try await userLogin(headers: headers)
